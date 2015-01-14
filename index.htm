@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <script type="text/javascript" src="Painter.js"></script>
+        <script type="text/javascript" src="TetrisEngine.js"></script>
+        
+        <script type="text/javascript">
+            function load() {
+                var BOARD_HEIGHT = 22;
+                var BOARD_WIDTH = 11;
+
+                var testEngine = new TetrisEngine(BOARD_HEIGHT, BOARD_WIDTH);
+                testEngine.painter = new TetrisPainter(BOARD_HEIGHT, BOARD_WIDTH);
+                testEngine.startNewGame();
+            }
+        </script>
+    </head>
+    <body onload="load()">
+        <canvas height="500px" width="250px" style="background-color: black" id="tetrisCanvas">
+        </canvas>
+    </body>
+</html>
