@@ -9,16 +9,19 @@ var TetrisEngine = function(boardHeight, boardWidth) {
     
     this.movePieceVertical = function(magnitude) {
         newYPosition = currentPieceY + magnitude;
-        console.log(selfReference.currentPiece);
-        if(newYPosition >= 0 && newYPosition + selfReference.currentPiece.height() <= boardHeight) {
-            currentPieceY = newYPosition;
-            postUpdateToPainter();
+        if(!checkForPieceCollision()) {
+            if(newYPosition >= 0 && newYPosition + selfReference.currentPiece.height() <= boardHeight) {
+                currentPieceY = newYPosition;
+                postUpdateToPainter();
+            }
+        }
+        else {
+            commitPieceToBoard();
         }
     }
     
     this.movePieceHorizontal = function(magnitude) {
         newXPosition = currentPieceX + magnitude;
-        console.log(selfReference.currentPiece.width());
         if(newXPosition >= 0 && newXPosition + selfReference.currentPiece.width() <= boardWidth) {
             currentPieceX = newXPosition;
             postUpdateToPainter();
@@ -33,29 +36,48 @@ var TetrisEngine = function(boardHeight, boardWidth) {
                 selfReference.board[h][w] = new Tile(false);   
             }
         }
-        
-        currentPieceX = Math.floor(boardWidth / 2);
-        currentPieceY = 0;
     }
     
      function spawnNewPiece() {
+        currentPieceX = Math.floor(boardWidth / 2);
+        currentPieceY = 0;
+         
         selfReference.currentPiece = new SPiece();
         postUpdateToPainter();
     }
     
-    function postUpdateToPainter() {
+    function createBoardWithCurrentPiece() {
         //Deep copy the current board and add the current piece
         piece = selfReference.currentPiece;
         drawBoard = JSON.parse(JSON.stringify(selfReference.board));
-        for(h = 0; h < piece.tiles.length; h++) {
+        for(h = 0; h < piece.height(); h++) {
             row = piece.tiles[h];
-            for(w = 0; w < row.length; w++) {
-                newTile = new Tile(row[w]);
-                newTile.color = 'red';
-                drawBoard[currentPieceY + h][currentPieceX + w] = newTile;
+            for(w = 0; w < piece.width(); w++) {
+                if(row[w]) {
+                    newTile = new Tile(row[w]);
+                    newTile.color = 'red';
+                    drawBoard[currentPieceY + h][currentPieceX + w] = newTile;
+                }
             }
         }
+        return drawBoard;
+    }
+    
+    function postUpdateToPainter() {
+        drawBoard = createBoardWithCurrentPiece();
         selfReference.painter.update(drawBoard);    
+    }
+    
+    function checkForPieceCollision() {
+        if(selfReference.currentPiece.height() + currentPieceY == boardHeight) {
+            return true;   
+        }
+    }
+    
+    function commitPieceToBoard() {
+        selfReference.board = createBoardWithCurrentPiece();
+        spawnNewPiece();
+        postUpdateToPainter();
     }
     
     var selfReference = this;
