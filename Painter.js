@@ -2,9 +2,9 @@ function TetrisPainter(boardHeight, boardWidth) {
     this.update = function(board) {
         if(canvas) {
             ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             for(h = 0; h < boardHeight; h++) {
                 for(w = 0; w < boardWidth; w++) {
-                    console.log(board);
                     tile = board[h][w];
                     if(tile && tile.isActive) {
                         x = w * TILE_WIDTH;
@@ -13,6 +13,7 @@ function TetrisPainter(boardHeight, boardWidth) {
                     }
                 }
             }
+            console.log(board);
         }
     }
     
@@ -22,6 +23,6 @@ function TetrisPainter(boardHeight, boardWidth) {
     }
     
     var canvas = document.getElementById('tetrisCanvas');
-    var TILE_HEIGHT = canvas.clientHeight / boardHeight;
-    var TILE_WIDTH = canvas.clientWidth / boardWidth;
+    var TILE_HEIGHT = canvas.height / boardHeight;
+    var TILE_WIDTH = canvas.width / boardWidth;
 }
