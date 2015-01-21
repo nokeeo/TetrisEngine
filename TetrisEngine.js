@@ -9,7 +9,7 @@ var TetrisEngine = function(boardHeight, boardWidth) {
     
     this.movePieceVertical = function(magnitude) {
         newYPosition = currentPieceY + magnitude;
-        if(!checkForPieceCollision()) {
+        if(!checkVerticalCollision()) {
             if(newYPosition >= 0 && newYPosition + selfReference.currentPiece.height() <= boardHeight) {
                 currentPieceY = newYPosition;
                 postUpdateToPainter();
@@ -22,7 +22,12 @@ var TetrisEngine = function(boardHeight, boardWidth) {
     
     this.movePieceHorizontal = function(magnitude) {
         newXPosition = currentPieceX + magnitude;
-        if(newXPosition >= 0 && newXPosition + selfReference.currentPiece.width() <= boardWidth) {
+        
+        canMoveRight = magnitude > 0 && !checkForHorizontalRightCollision();
+        canMoveLeft = magnitude < 0 && !checkForHorizontalLeftCollision();
+        
+        canMove = canMoveRight || canMoveLeft;
+        if(canMove && newXPosition >= 0 && newXPosition + selfReference.currentPiece.width() <= boardWidth) {
             currentPieceX = newXPosition;
             postUpdateToPainter();
         }
@@ -68,10 +73,49 @@ var TetrisEngine = function(boardHeight, boardWidth) {
         selfReference.painter.update(drawBoard);    
     }
     
-    function checkForPieceCollision() {
+    function checkVerticalCollision() {
         if(selfReference.currentPiece.height() + currentPieceY == boardHeight) {
             return true;   
         }
+        else {
+            //Check to see if the current piece has any collisions with the board
+            for(w = 0; w < selfReference.currentPiece.width(); w++) {
+                for(h = selfReference.currentPiece.height() - 1; h >= 0; h--) {
+                    boardTile = selfReference.board[h + currentPieceY + 1][w + currentPieceX];
+                    pieceTile = selfReference.currentPiece.tiles[h][w];
+                    if(boardTile.isActive && pieceTile) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    function checkForHorizontalLeftCollision() {
+        for(h = 0; h < selfReference.currentPiece.height(); h++) {
+            for(w = 0; w < selfReference.currentPiece.width(); w++) {
+                pieceTile = selfReference.currentPiece.tiles[h][w];
+                boardPiece = selfReference.board[h + currentPieceY][w + currentPieceX - 1];
+                if(boardPiece && boardPiece.isActive && pieceTile) {
+                    return true;   
+                }
+            }
+        }
+        return false;
+    }
+    
+    function checkForHorizontalRightCollision() {
+        for(h = 0; h < selfReference.currentPiece.height(); h++) {
+            for(w = 0; w < selfReference.currentPiece.width(); w++) {
+                pieceTile = selfReference.currentPiece.tiles[h][w];
+                boardPiece = selfReference.board[h + currentPieceY][w + currentPieceX + 1];
+                if(boardPiece && boardPiece.isActive && pieceTile) {
+                    return true;   
+                }
+            }
+        }
+        return false;
     }
     
     function commitPieceToBoard() {
