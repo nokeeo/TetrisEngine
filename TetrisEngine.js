@@ -52,8 +52,38 @@ var TetrisEngine = function(boardHeight, boardWidth) {
         currentPieceX = Math.floor(boardWidth / 2);
         currentPieceY = 0;
          
-        selfReference.currentPiece = new SPiece();
+        selfReference.currentPiece = generateRandomPiece();
+        console.log(selfReference.currentPiece);
         postUpdateToPainter();
+    }
+    
+    function generateRandomPiece() {
+        randomCode = Math.floor(Math.random() * 7);
+        console.log(randomCode);
+        switch(randomCode) {
+            case 0:
+                newPiece = new OPiece();
+                break;
+            case 1:
+                newPiece = new IPiece();
+                break;
+            case 2:
+                newPiece = new SPiece();
+                break;
+            case 3:
+                newPiece = new ZPiece();
+                break;
+            case 4:
+                newPiece = new LPiece();
+                break;
+            case 5:
+                newPiece = new JPiece();
+                break;
+            case 6:
+                newPiece = new TPiece();
+                break;
+        }
+        return newPiece;
     }
     
     function createBoardWithCurrentPiece() {
@@ -193,7 +223,7 @@ function IPiece() {
         [1]
     ];
 }
-OPiece.prototype = new Piece();
+IPiece.prototype = new Piece();
 
 function SPiece() {
     this.tiles = [
