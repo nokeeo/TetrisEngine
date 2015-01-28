@@ -21,7 +21,13 @@ function load() {
         if(37 in keysDown) {
             testEngine.movePieceHorizontal(-1);
         }
-
+        
+        //Rotates the piece
+        if(38 in keysDown) {
+            testEngine.rotateCurrentPiece();
+            delete keysDown[38];
+        }
+        
         //Moves piece to the right
         if(39 in keysDown) {
             testEngine.movePieceHorizontal(1)

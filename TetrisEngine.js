@@ -33,6 +33,11 @@ var TetrisEngine = function(boardHeight, boardWidth) {
         }
     }
     
+    this.rotateCurrentPiece = function() {
+        selfReference.currentPiece.rotate();
+        postUpdateToPainter();
+    }
+    
     function resetBoard() {
         //Initialize the board
         for(h = 0; h < boardHeight; h++) {
@@ -150,6 +155,27 @@ Piece.prototype.width = function() {
     return 0;
 }
 
+Piece.prototype.rotate = function() {
+    
+    //Transpose the tile matrix
+    transposed = []
+    for(x = 0; x < this.width(); x++) {
+        transposed[x] = [];
+        for(y = 0; y < this.height(); y++) {
+            transposed[x][y] = this.tiles[y][x];
+        }
+    }
+    
+    //Reverse rows of transposed matrix
+    reversed = [];
+    for(y = 0; y < this.width(); y++) {
+        reversed[y] = [];
+        for(x = 0; x < this.height(); x++) {
+            reversed[y][x] = transposed[y][this.height() - 1 - x];
+        }
+    }
+    this.tiles = reversed;
+}
 
 function OPiece() {
     this.tiles = [
