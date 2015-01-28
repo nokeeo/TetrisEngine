@@ -95,7 +95,7 @@ var TetrisEngine = function(boardHeight, boardWidth) {
             for(w = 0; w < piece.width(); w++) {
                 if(row[w]) {
                     newTile = new Tile(row[w]);
-                    newTile.color = 'red';
+                    newTile.color = piece.color;
                     drawBoard[currentPieceY + h][currentPieceX + w] = newTile;
                 }
             }
@@ -172,6 +172,7 @@ var Tile = function(isActive) {
 
 function Piece() {
     this.tiles = [];
+    this.color = '#FFFFFF';
 }
 
 Piece.prototype.height = function() {
@@ -212,6 +213,7 @@ function OPiece() {
         [1, 1],
         [1, 1],
     ];
+    this.color = '#ff0';
 }
 OPiece.prototype = new Piece();
 
@@ -222,6 +224,7 @@ function IPiece() {
         [1],
         [1]
     ];
+    this.color = '#0ff'
 }
 IPiece.prototype = new Piece();
 
@@ -230,6 +233,7 @@ function SPiece() {
         [0, 1, 1],
         [1, 1, 0]
     ];
+    this.color = '#0f0';
 }
 SPiece.prototype = new Piece();
 
@@ -238,6 +242,7 @@ function ZPiece() {
         [1, 1, 0],
         [0, 1, 1]
     ];
+    this.color = '#f00';
 }
 ZPiece.prototype = new Piece();
 
@@ -247,6 +252,7 @@ function LPiece() {
         [1, 0],
         [1, 1]
     ];
+    this.color = '#ffa500';
 }
 LPiece.prototype = new Piece();
 
@@ -256,6 +262,7 @@ function JPiece() {
         [0, 1],
         [1, 1]
     ];
+    this.color = '#00f';
 }
 JPiece.prototype = new Piece();
 
@@ -264,5 +271,6 @@ function TPiece() {
         [1, 1, 1],
         [0, 1, 0]
     ];
+    this.color = '#f0f';
 }
 TPiece.prototype = new Piece();
